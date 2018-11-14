@@ -6,6 +6,7 @@ import readchar
 from Xlib import display
 
 req = GATTRequester("D2:34:CA:A7:FA:20", False)
+response = GATTResponse()
 req.connect(True, "random")
 
 
@@ -27,11 +28,17 @@ while True:
 
   #key = ord(readchar.readchar())
   key = ord("q")
-  try:
-    req.write_by_handle_async(0x002a, str(bytearray([key,012])), callback()) # efe - single string
-  except:
-      print("fail")
-  time.sleep(0.1)
+
+  req.write_by_handle_async(0x002a, str(bytearray([key,012])), response)
+  while not response.received():
+      time.sleep(0.1)
+
+
+  #try:
+  #  req.write_by_handle_async(0x002a, str(bytearray([key,012])), callback()) # efe - single string
+  #except:
+  #    print("fail")
+  #time.sleep(0.1)
 
 # Response
 #response = GATTResponse()
