@@ -1,10 +1,10 @@
-#Python robot mouse control
+# Python robot mouse control
 
-##Overview
+## Overview
 These scripts allow for capturing mouse movements and sending them as servo instructions over Bluetooth to a BBC Micro:Bit robot.  
 
-##Requirements
-###Mouse control script
+## Requirements
+### Mouse control script
 In order to send instructions over Bluetooth Low-Energy we use the excellent [pygattlib](https://bitbucket.org/OscarAcena/pygattlib).  
 Follow the installation instructions at the pygattlib [repo](https://bitbucket.org/OscarAcena/pygattlib), not forgetting to install the dependencies listed in the `DEPENDS` file.  
   
@@ -12,7 +12,7 @@ Then, alter the Bluetooth device MAC address in `mouse-control.py` to use your d
   
 You can run the `mouse-control.py` script from your laptop, or as I do - from a Raspberri Pi.  
 
-###Micro:Bit robot
+### Micro:Bit robot
 After assembling your Micro:Bit robot (aka Micro:Bot), deploy the "mouse-control.js" script to your bot using [Microsoft MakeCode](https://makecode.microbit.org).  
   
 First, create a new project.  
@@ -27,6 +27,6 @@ Delete all Javascript code in the editor and paste the contents of `mouse-contro
   
 Click "Download" and install the resulting hex-file to your Micro:Bot (by dragging it to the Microbit drive when connected to PC).  
 
-##Usage
+## Usage
 Run `sudo python mouse-control.py`.  
 
