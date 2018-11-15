@@ -19,6 +19,7 @@ req = GATTRequester("D2:34:CA:A7:FA:20", False)
 response = GATTResponse()
 req.connect(True, "random")
 
+retry = 0
 
 #event
 #req.write_by_handle(0x001f, str(bytearray([0x2e])))
@@ -37,7 +38,7 @@ while True:
       olddata = data
 
   if data["root_x"] == olddata["root_x"]:
-      print("SAME")
+      #print("SAME")
       time.sleep(0.3)
       continue
 
@@ -51,11 +52,11 @@ while True:
   left = data["root_y"] - olddata["root_y"]
 
   #turn
-  right = ((right + (olddata["root_x"] - data["root_x"])) / 10 ) + 90
-  left = ((left + (olddata["root_x"] - data["root_x"])) / 10 ) + 90
+  right = ((right + (olddata["root_x"] - data["root_x"])) / 20 ) + 90
+  left = ((left + (olddata["root_x"] - data["root_x"])) / 20 ) + 90
 
-  print("left: ", left)
-  print("right: ", right)
+  #print("left: ", left)
+  #print("right: ", right)
 
   #time.sleep(0.5)
 
@@ -63,11 +64,24 @@ while True:
   left = toStr(left)
   right = toStr(right)
   full = right + left
-  print(full)
+  #print(full)
   
+
   req.write_by_handle_async(0x002a, str(bytearray(full)), response)
   while not response.received():
       time.sleep(0.1)
+      ++retry
+      if retry > 3:
+          print("RETRY", retry)
+          req.disconnect()
+          req.connect(True, "random")
+          retry = 0
+      try:
+        req.is_connected()
+        #print("CONNECTED")
+      except:
+        print("RE_CONNECT")
+        req.connect(True, "random")
   
   olddata = data
   time.sleep(0.3)
