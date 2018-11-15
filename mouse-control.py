@@ -5,6 +5,16 @@ import readchar
 #Mouse
 from Xlib import display
 
+def toStr(num):
+    numoct = []
+    numstr = str(num)
+    for c in numstr:
+        okt = ord(c)
+        numoct.append(okt)
+    numoct.append(012)
+    return numoct
+
+
 req = GATTRequester("D2:34:CA:A7:FA:20", False)
 response = GATTResponse()
 req.connect(True, "random")
@@ -23,7 +33,13 @@ while True:
   try:
       olddata
   except:
+      print("EXCEPT")
       olddata = data
+
+  if data["root_x"] == olddata["root_x"]:
+      print("SAME")
+      time.sleep(0.3)
+      continue
 
   #print("X:", data["root_x"])
   #print("Y:", data["root_y"])
@@ -31,22 +47,30 @@ while True:
   #print("Y:", data["root_y"])
   
   #forward/back
-  right = data["root_y"] - olddata["root_y"]
-  left = olddata["root_y"] - data["root_y"]
+  right = olddata["root_y"] - data["root_y"]
+  left = data["root_y"] - olddata["root_y"]
 
   #turn
-  right = right + (data["root_x"] - olddata["root_x"])
-  left = left + (data["root_x"] - olddata["root_x"])
+  right = ((right + (olddata["root_x"] - data["root_x"])) / 10 ) + 90
+  left = ((left + (olddata["root_x"] - data["root_x"])) / 10 ) + 90
 
   print("left: ", left)
   print("right: ", right)
 
-  time.sleep(0.5)
+  #time.sleep(0.5)
 
-  #req.write_by_handle_async(0x002a, str(bytearray([key,012])), response)
-  #while not response.received():
-  #    time.sleep(0.01)
-
+  #req.write_by_handle_async(0x002a, str(bytearray([right,012,left,012])), response)
+  left = toStr(left)
+  right = toStr(right)
+  full = right + left
+  print(full)
+  
+  req.write_by_handle_async(0x002a, str(bytearray(full)), response)
+  while not response.received():
+      time.sleep(0.1)
+  
+  olddata = data
+  time.sleep(0.3)
 
   #key = ord(readchar.readchar())
   #key = ord("q")
